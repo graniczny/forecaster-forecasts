@@ -1,2 +1,3 @@
-# forecaster-forecasts
-Analysis of forecasts for picked spot based on windfinder
+# Initialize repository
+
+This is init commit for Node Koa TS app with MonogDb (Mongoose)
