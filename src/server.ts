@@ -1,19 +1,10 @@
 import config from './utils/config';
 
 import Koa from 'koa';
-import mongoose from 'mongoose';
 import routes from './routes';
 import middlewares from './middlewares';
 
-mongoose.connect('mongodb://localhost/forecasts', {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log(`Mongodb connected!`);
-});
+import './db/connect';
 
 const app = new Koa();
 app
