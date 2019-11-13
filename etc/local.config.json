@@ -1,0 +1,13 @@
+{
+  "env": {
+    "env": "local",
+    "api_prefix": "process.env.FORECASTS_SERVICE_PREFIX",
+    "port": "process.env.PORT"
+  },
+  "bcrypt": {
+    "rounds": 10
+  },
+  "cors": {
+    "allowedOrigin": "process.env.CORS_ALLOWED_ORIGIN"
+  }
+}
