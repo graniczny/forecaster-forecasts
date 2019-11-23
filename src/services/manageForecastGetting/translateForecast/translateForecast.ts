@@ -1,15 +1,5 @@
 import { ElementHandle } from 'puppeteer';
-
-interface HourForecast {
-  windDirection: string;
-  windSpeed: string;
-  gusts: string;
-  hour: string;
-}
-interface DayForecast {
-  day: string;
-  hours: HourForecast[];
-}
+import { HourForecast, DayForecast } from '../../../interfaces';
 
 async function elementGetter(
   element: ElementHandle,

@@ -5,12 +5,9 @@ import { GetCurrentForecastInput } from '../../../interfaces';
 import scope from '../../../utils/chromeCrawler/scope';
 import { goToPage } from '../../../utils/chromeCrawler/handlers';
 
-const headless: boolean = process.env.SHOW_BROWSER === 'true';
-const slowMo: number = headless ? 60 : 0;
-
 const readForecast = async ({
   spotUrlPart
-}: GetCurrentForecastInput): Promise<ElementHandle[]> => {
+}: Partial<GetCurrentForecastInput>): Promise<ElementHandle[]> => {
   //
   // TODO split pupeteer code into modules
 

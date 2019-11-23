@@ -1,11 +1,13 @@
 import { GetCurrentForecastInput } from './GetCurrentForecastInput';
-import { SpotConfig } from './SpotConfig';
 import { StandardReturnToRouter } from './StandardReturnToRouter';
-import { Forecast } from './Forecast';
+import { HourForecast } from './HourForecast';
+import { DayForecast } from './DayForecast';
+import { PeriodForecast } from './PeriodForecast';
 
 export {
-  SpotConfig,
   GetCurrentForecastInput,
   StandardReturnToRouter,
-  Forecast
+  HourForecast,
+  DayForecast,
+  PeriodForecast
 };
