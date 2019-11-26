@@ -10,7 +10,7 @@ export interface ISpotRecentForecast extends Document {
 }
 
 // TODO co zrobić z HourForecast, jakos scheme dodać gdzies?
-const SpotRecentForecastSchema: Schema = new Schema({
+export const SpotRecentForecastSchema: Schema = new Schema({
   spotName: { type: String, required: true, unique: true },
   spotUrlPart: { type: String, required: true, unique: true },
   timestamp: { type: Number, required: true, unique: false },
@@ -19,7 +19,7 @@ const SpotRecentForecastSchema: Schema = new Schema({
       day: { type: String, required: true, unique: false },
       hours: [
         {
-          windDirection: { type: String, required: true, unique: false },
+          windDirection: { type: String, required: false, unique: false },
           windSpeed: { type: String, required: true, unique: false },
           gusts: { type: String, required: true, unique: false },
           hour: { type: String, required: true, unique: false }

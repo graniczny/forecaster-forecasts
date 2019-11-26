@@ -3,12 +3,11 @@ import { ElementHandle } from 'puppeteer';
 
 import {
   GetCurrentForecastInput,
-  StandardReturnToRouter
+  StandardReturnToRouter,
+  DayForecast
 } from '../../interfaces';
 import SpotConfig, { ISpotConfig } from '../../models/SpotConfig';
-import SpotRecentForecast, {
-  ISpotRecentForecast
-} from '../../models/SpotRecentForecast';
+import { ISpotRecentForecast } from '../../models/SpotRecentForecast';
 
 import {
   runBlankPage,
@@ -16,17 +15,23 @@ import {
 } from '../../utils/chromeCrawler/handlers';
 import readForecast from './readForecast';
 import translateForecast from './translateForecast';
+import validateForecast from './validateForecast';
+import archiveForecast from './archiveForecast';
+import saveForecast from './saveForecast';
 
-const getForecast = async ({
+const manageForecastGetting = async ({
   spotUrlPart,
   spotName
 }: GetCurrentForecastInput): Promise<StandardReturnToRouter> => {
   let spotConfigurationObj: Partial<ISpotConfig>;
   try {
-    spotConfigurationObj = await SpotConfig.findOne({ spotUrlPart }).exec();
+    spotConfigurationObj = await SpotConfig.findOne({
+      spotUrlPart,
+      spotName
+    }).exec();
   } catch (err) {
     console.error(
-      `[getForecast()] error while searching for spot configuration object, error: ${err}`
+      `[manageForecastGetting()] error while searching for spot configuration object, error: ${err}`
     );
     return {
       status: httpStatusCodes.BAD_REQUEST,
@@ -44,7 +49,7 @@ const getForecast = async ({
     await runBlankPage();
   } catch (err) {
     console.error(
-      `[getForecast()] error while launching blank page, error: ${err}`
+      `[manageForecastGetting()] error while launching blank page, error: ${err}`
     );
     return {
       status: httpStatusCodes.INTERNAL_SERVER_ERROR,
@@ -57,7 +62,7 @@ const getForecast = async ({
     recentForecast = await readForecast({ spotUrlPart });
   } catch (err) {
     console.error(
-      `[getForecast()] error while reading forecast, error: ${err}`
+      `[manageForecastGetting()] error while reading forecast, error: ${err}`
     );
     return {
       status: httpStatusCodes.INTERNAL_SERVER_ERROR,
@@ -65,12 +70,12 @@ const getForecast = async ({
     };
   }
 
-  let dbSuitedForecast: any;
+  let dbSuitedForecast: DayForecast[];
   try {
     dbSuitedForecast = await translateForecast(recentForecast);
   } catch (err) {
     console.error(
-      `[getForecast()] error while translating forecast into wanted DB format, error: ${err}`
+      `[manageForecastGetting()] error while translating forecast into wanted DB format, error: ${err}`
     );
     return {
       status: httpStatusCodes.INTERNAL_SERVER_ERROR,
@@ -82,7 +87,7 @@ const getForecast = async ({
     await shutDownBrowser();
   } catch (err) {
     console.error(
-      `[getForecast()] error while shuting down browser, error: ${err}`
+      `[manageForecastGetting()] error while shuting down browser, error: ${err}`
     );
     return {
       status: httpStatusCodes.INTERNAL_SERVER_ERROR,
@@ -91,18 +96,60 @@ const getForecast = async ({
   }
 
   // TODO zobaczyć czy ten interfejsy Icostam sa dobrze uzyte, czy moze tam partiali nie trzeba
-  const spotRecentForecast: ISpotRecentForecast = {
+  const spotRecentForecast: Partial<ISpotRecentForecast> = {
     spotName,
     spotUrlPart,
     timestamp: new Date().getTime(),
     forecasts: dbSuitedForecast
   };
 
-  // TODO dodać zapisywanie do bazy here
+  let isValid: boolean;
+  try {
+    isValid = await validateForecast(spotRecentForecast);
+  } catch (err) {
+    console.error(
+      `[manageForecastGetting()] error while validating forecast, error: ${err}`
+    );
+    return {
+      status: httpStatusCodes.INTERNAL_SERVER_ERROR,
+      error: err.message
+    };
+  }
+  if (!isValid) {
+    console.log(`Forecast is invalid`);
+    return {
+      status: httpStatusCodes.BAD_REQUEST,
+      error: 'Forecast is invalid'
+    };
+  }
+
+  try {
+    await archiveForecast(spotUrlPart);
+  } catch (err) {
+    console.error(
+      `[manageForecastGetting()] error while archiving forecast, error: ${err}`
+    );
+    return {
+      status: httpStatusCodes.INTERNAL_SERVER_ERROR,
+      error: err.message
+    };
+  }
+
+  try {
+    await saveForecast(spotRecentForecast);
+  } catch (err) {
+    console.error(
+      `[manageForecastGetting()] error while saving forecast, error: ${err}`
+    );
+    return {
+      status: httpStatusCodes.INTERNAL_SERVER_ERROR,
+      error: err.message
+    };
+  }
 
   return {
     status: httpStatusCodes.OK
   };
 };
 
-export default getForecast;
+export default manageForecastGetting;
