@@ -14,9 +14,6 @@ const readForecast = async ({
   try {
     await goToPage(spotUrlPart);
   } catch (err) {
-    console.error(
-      `[readForecast()] error while going to wanted URL, error: ${err}`
-    );
     throw new Error(
       `There is a problem while going to wanted URL, error: ${err}`
     );
@@ -29,8 +26,8 @@ const readForecast = async ({
     );
     await acceptCookiesButtonOk.click();
   } catch (err) {
-    console.error(
-      `[readForecast()] error while accepting cookies just after site enter, error: ${err}`
+    throw new Error(
+      `There is a problem while accepting cookies just after site enter, error: ${err.message}`
     );
   }
 
@@ -38,9 +35,6 @@ const readForecast = async ({
   try {
     forecastsHtmlNodes = await scope.page.$$('.weathertable.forecast');
   } catch (err) {
-    console.error(
-      `[readForecast()] error while geting wanted forecasts, error: ${err}`
-    );
     throw new Error(`There is a problem with geting forecasts, error: ${err}`);
   }
   if (!forecastsHtmlNodes || forecastsHtmlNodes.length !== 10) {

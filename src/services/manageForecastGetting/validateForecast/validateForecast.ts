@@ -22,24 +22,12 @@ export default async function validateForecast(
     return true;
   }
 
-  // todo tutaj trzeba sprawdzic wtf z tymi forecastami, ktore mysla ze sa inne
-  let forecastsDiffers = false;
-  previousForecast.forecasts.forEach((dayForecast, dayIndex) => {
-    dayForecast.hours.forEach((hourForecast, hourIndex) => {
-      if (
-        hourForecast.gusts !==
-          forecast.forecasts[dayIndex].hours[hourIndex].gusts ||
-        hourForecast.windSpeed !==
-          forecast.forecasts[dayIndex].hours[hourIndex].windSpeed ||
-        hourForecast.windDirection !==
-          forecast.forecasts[dayIndex].hours[hourIndex].windDirection
-      ) {
-        forecastsDiffers = true;
-      }
-    });
-  });
-  if (!forecastsDiffers) {
+  if (
+    previousForecast.lastUpdateHour === forecast.lastUpdateHour &&
+    previousForecast.forecasts[0].day === forecast.forecasts[0].day
+  ) {
     return false;
   }
+
   return true;
 }

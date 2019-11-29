@@ -18,6 +18,7 @@ import translateForecast from './translateForecast';
 import validateForecast from './validateForecast';
 import archiveForecast from './archiveForecast';
 import saveForecast from './saveForecast';
+import getLastUpdateHour from './getLastUpdateHour';
 
 const manageForecastGetting = async ({
   spotUrlPart,
@@ -83,11 +84,24 @@ const manageForecastGetting = async ({
     };
   }
 
+  let lastUpdateHour: string;
+  try {
+    lastUpdateHour = await getLastUpdateHour();
+  } catch (err) {
+    console.error(
+      `[manageForecastGetting()] error while getting last update hour, error: ${err.message}`
+    );
+    return {
+      status: httpStatusCodes.INTERNAL_SERVER_ERROR,
+      error: err.message
+    };
+  }
+
   try {
     await shutDownBrowser();
   } catch (err) {
     console.error(
-      `[manageForecastGetting()] error while shuting down browser, error: ${err}`
+      `[manageForecastGetting()] error while shuting down browser, error: ${err.message}`
     );
     return {
       status: httpStatusCodes.INTERNAL_SERVER_ERROR,
@@ -99,6 +113,7 @@ const manageForecastGetting = async ({
   const spotRecentForecast: Partial<ISpotRecentForecast> = {
     spotName,
     spotUrlPart,
+    lastUpdateHour,
     timestamp: new Date().getTime(),
     forecasts: dbSuitedForecast
   };
@@ -119,7 +134,7 @@ const manageForecastGetting = async ({
     console.log(`Forecast is invalid`);
     return {
       status: httpStatusCodes.BAD_REQUEST,
-      error: 'Forecast is invalid'
+      error: 'Forecast is invalid or it is already in db.'
     };
   }
 

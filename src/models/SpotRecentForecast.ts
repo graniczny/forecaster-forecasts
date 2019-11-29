@@ -6,6 +6,7 @@ export interface ISpotRecentForecast extends Document {
   spotName: string;
   spotUrlPart: string;
   timestamp: number;
+  lastUpdateHour: string;
   forecasts: DayForecast[];
 }
 
@@ -14,6 +15,7 @@ export const SpotRecentForecastSchema: Schema = new Schema({
   spotName: { type: String, required: true, unique: true },
   spotUrlPart: { type: String, required: true, unique: true },
   timestamp: { type: Number, required: true, unique: false },
+  lastUpdateHour: { type: String, required: true, unique: false },
   forecasts: [
     {
       day: { type: String, required: true, unique: false },
