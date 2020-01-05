@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+import { MinimalForecast } from '../interfaces';
 import { WindDirections, SpotTypes, Countries } from '../enums';
 
 export interface ISpotConfig extends Document {
@@ -9,6 +10,7 @@ export interface ISpotConfig extends Document {
   country: Countries;
   windDirections?: WindDirections[];
   spotType?: SpotTypes[];
+  minimalForecast?: MinimalForecast[];
 }
 
 const SpotConfigSchema: Schema = new Schema({
@@ -23,7 +25,19 @@ const SpotConfigSchema: Schema = new Schema({
       required: false
     }
   ],
-  spotType: { type: String, enum: Object.keys(SpotTypes), required: false }
+  spotType: { type: String, enum: Object.keys(SpotTypes), required: false },
+  minimalForecast: [
+    {
+      direction: [
+        {
+          type: String,
+          enum: Object.keys(WindDirections),
+          required: true
+        }
+      ],
+      minWindSpeed: { type: Number, required: true }
+    }
+  ]
 });
 
 export default mongoose.model<ISpotConfig>('SpotConfig', SpotConfigSchema);

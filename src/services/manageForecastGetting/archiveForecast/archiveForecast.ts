@@ -9,7 +9,15 @@ export default async function archiveForecast(
 ): Promise<boolean> {
   let recentForecast: Partial<ISpotRecentForecast>;
   try {
-    recentForecast = await SpotRecentForecast.findOne({ spotUrlPart })
+    recentForecast = await SpotRecentForecast.findOne(
+      { spotUrlPart },
+      {
+        _id: false,
+        __v: false,
+        'forecasts._id': false,
+        'forecasts.hours._id': false
+      }
+    )
       .lean()
       .exec();
   } catch (err) {
@@ -21,8 +29,15 @@ export default async function archiveForecast(
   if (!recentForecast) {
     return true;
   }
-
-  const newArchivedForecast = new ForecastsArchive(recentForecast);
+  const { spotName, timestamp, lastUpdateHour, forecasts } = recentForecast;
+  const archiveForecast: Partial<ISpotRecentForecast> = {
+    spotName,
+    spotUrlPart,
+    timestamp,
+    lastUpdateHour,
+    forecasts
+  };
+  const newArchivedForecast = new ForecastsArchive(archiveForecast);
   try {
     await newArchivedForecast.save();
   } catch (err) {

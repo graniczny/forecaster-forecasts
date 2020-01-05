@@ -4,9 +4,9 @@ import { ISpotRecentForecast } from './SpotRecentForecast';
 // TODO trzeba cos z ta schema pkombinowac
 
 export const ForecastsArchiveSchema: Schema = new Schema({
-  spotName: { type: String, required: true, unique: false },
-  spotUrlPart: { type: String, required: true, unique: false },
   timestamp: { type: Number, required: true, unique: false },
+  spotName: { type: String, required: true, unique: false, sparse: true },
+  spotUrlPart: { type: String, required: true, unique: false },
   forecasts: [
     {
       day: { type: String, required: true, unique: false },

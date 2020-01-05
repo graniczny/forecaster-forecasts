@@ -109,7 +109,6 @@ const manageForecastGetting = async ({
     };
   }
 
-  // TODO zobaczyć czy ten interfejsy Icostam sa dobrze uzyte, czy moze tam partiali nie trzeba
   const spotRecentForecast: Partial<ISpotRecentForecast> = {
     spotName,
     spotUrlPart,
