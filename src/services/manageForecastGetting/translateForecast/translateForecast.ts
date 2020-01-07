@@ -35,10 +35,6 @@ const translateForecast = async (
             stripe,
             '.cell-timespan .data-time .value'
           );
-          hourForecast.windDirection = await elementGetter(
-            stripe,
-            '.data-direction-arrow .directionarrow'
-          );
           hourForecast.windSpeed = await elementGetter(
             stripe,
             '.speed .units-ws'
@@ -47,6 +43,15 @@ const translateForecast = async (
             stripe,
             '.data-gusts .units-ws'
           );
+
+          const directionNode = await stripe.$(
+            '.data-direction-arrow .directionarrow'
+          );
+          hourForecast.windDirection = await directionNode.evaluate(node => {
+            const title = node.title;
+            return title.substring(0, title.length - 1);
+          });
+
           return hourForecast;
         })
       );
