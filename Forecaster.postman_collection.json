@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "a69695af-0c2f-40df-bc8f-727d84fb5da6",
+		"name": "Forecaster",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getCurrentForecast",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"spotUrlPart\": \"gran_canaria_pozo_izquierdo\",\n\t\"spotName\": \"Pozo Izquierdo\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}/api/forecasts/getOne",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"forecasts",
+						"getOne"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createSpotConfig",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"spotUrlPart\": \"gran_canaria_pozo_izquierdo\",\n\t\"spotName\": \"Pozo Izquierdo\",\n\t\"country\": \"Spain\",\n\t\"windDirections\": [\"NNE\", \"ENE\", \"NE\"],\n\t\"spotType\": \"wave\",\n\t\"minimalForecast\":[{\"direction\":[\"NNE\", \"ENE\", \"NE\"], \"minWindSpeed\": 15}]\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}/api/spot-config/create",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"spot-config",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "71c5bed6-cf5e-458d-b280-9791cd3122f2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "018c401a-0253-41f8-900e-8e75586d76f7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "d572ca28-6f06-4e61-82c4-7583a89ed860",
+			"key": "host",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

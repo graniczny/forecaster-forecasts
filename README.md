@@ -1,9 +1,3 @@
 # forecaster-forecasts
 
-Analysis of forecasts for picked spot based on windfinder
-
-# TODO
-
-- tworzenie prognoz
-- deploy
-- ustawienie cron joba (nie na endpointch, tylko na skrypcie, usunięcie niepotrzebnych endpointtów)
+puppeteer used for fetching wind forecasts data and saving it to mongodb base
