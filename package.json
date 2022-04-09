@@ -30,7 +30,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-compose": "^4.1.0",
     "koa-router": "^7.4.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.7.10",
     "puppeteer": "^2.0.0",
     "uuid": "^3.3.3"
